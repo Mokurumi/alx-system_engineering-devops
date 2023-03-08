@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync -av --update --exclude=.*/ --exclude=lost+found/ --ignore-existing *.html ./ ../
+cp -u *.html ..
