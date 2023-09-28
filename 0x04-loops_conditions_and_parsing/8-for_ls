@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# This script lists files in the current directory, displaying only text after the first dash
+
+for file in *; do
+    if [[ -f "$file" && ! "$file" =~ ^\. ]]; then
+        # Use cut to extract text after the first dash and display it
+        display_name=$(echo "$file" | cut -d'-' -f2-)
+        echo "$display_name"
+    fi
+done
