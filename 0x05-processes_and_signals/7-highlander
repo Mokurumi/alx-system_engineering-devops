@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # This script display indefinitely and is stopped by ^C
 
+trap 'echo "I am invincible!!!"' SIGTERM
 while true; do
     echo "To infinity and beyond"
     sleep 2

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# This script stops the indefinite process using pkill
+pkill -f 7-highlander
