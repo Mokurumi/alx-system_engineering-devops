@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# This bash script does the following:
+#     When passing the argument start:
+#         Starts manage_my_process
+#         Creates a file containing its PID in /var/run/my_process.pid
+#         Displays manage_my_process started
+#     When passing the argument stop:
+#         Stops manage_my_process
+#         Deletes the file /var/run/my_process.pid
+#         Displays manage_my_process stopped
+#     When passing the argument restart
+#         Stops manage_my_process
+#         Deletes the file /var/run/my_process.pid
+#         Starts manage_my_process
+#         Creates a file containing its PID in /var/run/my_process.pid
+#         Displays manage_my_process restarted
+#     Displays Usage: manage_my_process {start|stop|restart} if any other argument or no argument is passed
+
+# Check the argument passed to the script
+case "$1" in
+    start)
+        write_alive &
+        echo $! > /var/run/my_process.pid
+        echo "manage_my_process started"
+        ;;
+    stop)
+        kill $(cat /var/run/my_process.pid)
+        rm -f /var/run/my_process.pid
+        echo "manage_my_process stopped"
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        echo "manage_my_process restarted"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0

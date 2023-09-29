@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# This script display indefinitely and is stopped by ^C
+
+while true; do
+    echo "I am alive!"
+    sleep 2
+done
