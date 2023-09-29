@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# This script prints the Bash PID
+
+# Ignore shellcheck error for the next line
+# shellcheck disable=SC2009
+ps aux --forest | grep -E 'bash|bash$' | grep -v 'grep'

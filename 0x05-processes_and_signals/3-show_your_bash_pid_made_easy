@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# This script prints the Bash PID
+
+# Use pgrep to find processes with the name containing "bash"
+ps aux | grep '[b]ash' | awk '{print $2, $11}'
