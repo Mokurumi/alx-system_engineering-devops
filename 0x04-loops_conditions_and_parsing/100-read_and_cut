@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# This script reads contents from a file from path
+
+# Read the /etc/passwd file line by line
+while IFS=: read -r username _ uid _ _ home _; do
+    echo "Username: $username"
+    echo "User ID: $uid"
+    echo "Home Directory: $home"
+done < /etc/passwd
