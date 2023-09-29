@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# This script uses awk to get access to a file
+
+# Use awk to extract and format the IP and HTTP status code
+awk '{print $1, $9}' apache-access.log | sort | uniq -c | sort -rn
