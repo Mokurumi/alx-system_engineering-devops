@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# this script configures DNS resolutions for facebook and localhost
 
 # Check if the script is running in Docker
 if [ -f "/.dockerenv" ]; then
@@ -13,4 +14,4 @@ echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts
 echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts
 
 # Restart networking to apply changes
-sudo systemctl restart networking
+# sudo systemctl restart networking
