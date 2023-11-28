@@ -10,9 +10,8 @@ apt install -y nginx
 # allowing nginx on firewall
 ufw allow 'Nginx HTTP'
 
-# Ensure Nginx is listening on port 80
-server_block_path="/etc/nginx/sites-available/default"
-sed -i 's/listen 80 default_server;/listen 80;/g' "$server_block_path"
+# Redirect
+sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.google.com/ permanent;' /etc/nginx/sites-available/default
 
 # Create a temporary HTML file containing "Hello World!"
 echo "Hello World!" > /var/www/html/index.html
