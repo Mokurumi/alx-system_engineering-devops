@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# This script installs and configures nginx
+
+# Update package list
+apt update
+
+# Install nginx
+apt install -y nginx
+
+# allowing nginx on firewall
+ufw allow 'Nginx HTTP'
+
+# Create a temporary HTML file containing "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
+
+# Restart Nginx
+service nginx restart
