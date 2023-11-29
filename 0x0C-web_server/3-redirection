@@ -11,7 +11,7 @@ apt install -y nginx
 ufw allow 'Nginx HTTP'
 
 # Redirect
-sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.google.com/ permanent;' /etc/nginx/sites-available/default
+sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/ permanent;' /etc/nginx/sites-available/default
 
 # Create a temporary HTML file containing "Hello World!"
 echo "Hello World!" > /var/www/html/index.html
