@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# This script installs and configures nginx
+# This script configures NGINX to perform a 301 redirection using sed
 
 # Update package list
 apt update
 
-# Install nginx
+# Install NGINX
 apt install -y nginx
 
-# allowing nginx on firewall
+# Allowing NGINX on firewall
 ufw allow 'Nginx HTTP'
 
-# Redirect
-sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/ permanent;' /etc/nginx/sites-available/default
+# Set up 301 redirection using sed
+sed -i '/server_name _;/a \\n    location \/redirect_me {\n        rewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;\n    }' /etc/nginx/sites-available/default
 
-# Create a temporary HTML file containing "Hello World!"
-echo "Hello World!" > /var/www/html/index.html
+# Test NGINX configuration
+nginx -t
 
-# Restart Nginx
+# Restart NGINX
 service nginx restart

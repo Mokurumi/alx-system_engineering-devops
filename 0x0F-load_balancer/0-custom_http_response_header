@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# this script install nginx on a webserver
+
+# Update package list
+apt update
+
+# Install nginx
+apt install -y nginx
+
+# allowing nginx on firewall
+ufw allow 'Nginx HTTP'
+
+# Ensure Nginx is listening on port 80
+server_block_path="/etc/nginx/sites-available/default"
+sed -i 's/listen 80 default_server;/listen 80;/g' "$server_block_path"
+
+# Configure Nginx to add custom HTTP header
+sudo sed -i '/server_name _;/a \\tadd_header X-Served-By $HOSTNAME;' /etc/nginx/sites-available/default
+
+# Restart Nginx to apply changes
+sudo systemctl restart nginx

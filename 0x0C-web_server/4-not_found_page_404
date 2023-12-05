@@ -4,21 +4,20 @@
 # Update package list
 apt update
 
-# Install nginx
+# Install NGINX
 apt install -y nginx
 
-# allowing nginx on firewall
+# Allowing NGINX on firewall
 ufw allow 'Nginx HTTP'
 
-# Redirect
-sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/ permanent;' /etc/nginx/sites-available/default
+# Create a custom 404 error page containing the specified string
+echo 'Ceci n'"'"'est pas une page' > /usr/share/nginx/html/404.html
 
-# Create a temporary HTML file containing "Hello World!"
-echo "Hello World!" > /var/www/html/index.html
+# Configure NGINX to use the custom 404 page
+sed -i '/server_name _;/a \\n    error_page 404 /404.html;\n    location = /404.html {\n        root /usr/share/nginx/html;\n        internal;\n    }\n    location = /404 {\n        return 404 "Ceci n'"'"'est pas une page";\n    }' /etc/nginx/sites-available/default
 
-# page 404
-echo "Ceci n'est pas une page" > /usr/share/nginx/html/custom_404.html
-sed -i '/listen 80 default_server/a error_page 404 /custom_404.html; location = /custom_404.html {root /usr/share/nginx/html; internal;}' /etc/nginx/sites-available/default
+# Test NGINX configuration
+nginx -t
 
-# Restart Nginx
+# Restart NGINX
 service nginx restart

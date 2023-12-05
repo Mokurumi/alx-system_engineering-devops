@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# this sscript installs a load balancer
+# Update package list
+apt-get update -y
+
+# Install HAProxy
+apt-get install haproxy=2.0.\*
+
+# Configure HAProxy
+sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<EOT
+frontend http-in
+        bind *:80
+        default_backend servers
+backend servers
+    balance roundrobin
+    server 326145-web-01 100.27.2.172:80 check
+    server 326145-web-02 100.25.158.175:80 check
+EOT
+
+# Ensure correct hostnames (optional if not already configured)
+sudo hostnamectl set-hostname 326145-lb-01
+
+# start HAProxy
+sudo /etc/init.d/haproxy start
+
+# set HAProxy to start on boot
+sudo update-rc.d haproxy defaults
+
+# reload HAProxy configuration
+sudo /etc/init.d/haproxy reload
