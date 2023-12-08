@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# this sscript installs a load balancer
+# This script installs and configures an HAProxy load balancer
+
 # Update package list
 apt-get update -y
 
 # Install HAProxy
-apt-get install haproxy=2.0.\*
+apt-get install -y haproxy
 
 # Configure HAProxy
-sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<EOT
+cat <<EOT | sudo tee /etc/haproxy/haproxy.cfg > /dev/null
 frontend http-in
         bind *:80
         default_backend servers
@@ -20,11 +21,19 @@ EOT
 # Ensure correct hostnames (optional if not already configured)
 sudo hostnamectl set-hostname 326145-lb-01
 
-# start HAProxy
-sudo /etc/init.d/haproxy start
+# Start HAProxy
+sudo systemctl start haproxy
 
-# set HAProxy to start on boot
-sudo update-rc.d haproxy defaults
+# Enable HAProxy to start on boot
+sudo systemctl enable haproxy
 
-# reload HAProxy configuration
-sudo /etc/init.d/haproxy reload
+# Reload HAProxy configuration
+sudo systemctl reload haproxy
+
+# Check the status of HAProxy and configured servers
+echo "HAProxy Status:"
+sudo systemctl status haproxy --no-pager
+
+echo "Configured Servers:"
+sudo grep -E 'server [0-9]+-web-[0-9]+ [0-9.]+:[0-9]+' /etc/haproxy/haproxy.cfg | awk '{print $2}'
+
