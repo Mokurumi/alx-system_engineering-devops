@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-# This script configures Nginx to add a custom HTTP header
+# This script installs and configures nginx
 
 # Update package list
 apt update
 
-# Install Nginx
+# Install nginx
 apt install -y nginx
 
-# Allow Nginx on firewall
+# Allowing nginx on firewall
 ufw allow 'Nginx HTTP'
+
+# Create a temporary HTML file containing "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
+
+# Add custom header to Nginx configuration
+echo 'add_header X-Served-By $hostname;' >> /etc/nginx/nginx.conf
 
 # Ensure Nginx is listening on port 80
 server_block_path="/etc/nginx/sites-available/default"
 sed -i 's/listen 80 default_server;/listen 80;/g' "$server_block_path"
 
-# Configure Nginx to add custom HTTP header with the server's hostname
-echo 'add_header X-Served-By $HOSTNAME;' | sudo tee -a "$server_block_path" > /dev/null
-
-# Restart Nginx to apply changes
-sudo systemctl restart nginx
+# Restart Nginx
+service nginx restart

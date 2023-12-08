@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# this script prints the record type and destination of subdomains
+
+# Check if the correct number of arguments is provided
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi
+
+domain=$1
+subdomain=$2
+
+# Function to get DNS information for a subdomain
+get_dns_info() {
+    sub_domain=$1
+    dns_info=$(dig $sub_domain.$domain +short)
+
+    # Check if DNS information is available
+    if [ -z "$dns_info" ]; then
+        echo "Error: No DNS information found for $sub_domain.$domain"
+        exit 1
+    fi
+
+    record_type=$(dig $sub_domain.$domain | awk '/ANSWER SECTION/ {getline; print $4}')
+    expected_ip=$(dig $sub_domain.$domain | awk '/ANSWER SECTION/ {getline; print $5}')
+
+    echo "The subdomain $sub_domain is a $record_type record and points to $dns_info"
+
+    # Check if the actual IP matches the expected IP
+    if [ "$dns_info" != "$expected_ip" ]; then
+        echo "Warning: The actual IP ($dns_info) does not match the expected IP ($expected_ip)"
+    fi
+}
+
+# If no subdomain is provided, display information for default subdomains
+if [ -z "$subdomain" ]; then
+    get_dns_info www
+    get_dns_info lb-01
+    get_dns_info web-01
+    get_dns_info web-02
+else
+    # Display information for the specified subdomain
+    get_dns_info $subdomain
+fi
