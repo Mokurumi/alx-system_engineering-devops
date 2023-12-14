@@ -15,17 +15,9 @@ global
     user haproxy
     group haproxy
 
-defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000ms
-    timeout client  50000ms
-    timeout server  50000ms
-
-frontend http_front
+frontend http
     bind *:80
+    mode    http
     default_backend http_back
 
 backend http_back
@@ -35,7 +27,7 @@ backend http_back
 EOF
 
 # Ensure HAProxy can be managed via an init script
-sudo systemctl enable haproxy
+# sudo systemctl enable haproxy
 
 # Restart HAProxy to apply changes
 sudo systemctl restart haproxy
