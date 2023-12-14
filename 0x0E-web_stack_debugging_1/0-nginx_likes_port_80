@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 # This script automates nginx fix
 
-# Ensure Nginx is installed
-sudo apt-get update
-sudo apt-get install -y nginx
-
-#drop the current files
-sudo rm /etc/nginx/sites-enabled/default
-
 #link the files with the enabled sites
-sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-
-# Check Nginx configuration
-sudo nginx -t
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Restart Nginx
 sudo systemctl restart nginx
