@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 # This script automates nginx fix
-sudo apt-get update
-sudo apt-get install -y nginx
-sudo systemctl restart nginx
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+pkill -1 nginx
