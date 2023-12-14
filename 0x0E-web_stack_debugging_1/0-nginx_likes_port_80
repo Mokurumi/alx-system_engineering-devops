@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 # This script automates nginx fix
-
-#link the files with the enabled sites
-sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-# Restart Nginx
-sudo systemctl restart nginx
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+service nginx start
