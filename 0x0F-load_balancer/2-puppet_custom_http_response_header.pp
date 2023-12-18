@@ -1,18 +1,48 @@
 # Install Nginx package
+include stdlib
+
+$link = 'https://www.youtube.com/watch?v=QH2-TGUlwu4'
+$content = "\trewrite ^/redirect_me/$ ${link} permanent;"
+$custom_header = "add_header X-Served-By \$hostname;"
+
+exec { 'update packages':
+  command => '/usr/bin/apt-get update'
+}
+
+exec { 'restart nginx':
+  command => '/usr/sbin/service nginx restart',
+  require => Package['nginx']
+}
+
 package { 'nginx':
-  ensure => installed,
+  ensure  => 'installed',
+  require => Exec['update packages']
 }
 
-# Configure Nginx with custom HTTP response header
-file { '/etc/nginx/conf.d/custom_headers.conf':
-  ensure  => present,
-  content => "server_tokens off;\nadd_header X-Served-By ${facts['served_by']};\n",
-  notify  => Service['nginx'],
+file { '/var/www/html/index.html':
+  ensure  => 'present',
+  content => 'Hello World!',
+  mode    => '0644',
+  owner   => 'root',
+  group   => 'root'
 }
 
-# Restart Nginx service after the configuration change
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  subscribe  => File['/etc/nginx/conf.d/custom_headers.conf'],
+file_line { 'Set 301 redirection':
+  ensure   => 'present',
+  after    => 'server_name\ _;',
+  path     => '/etc/nginx/sites-available/default',
+  multiple => true,
+  line     => $content,
+  notify   => Exec['restart nginx'],
+  require  => File['/var/www/html/index.html']
+}
+
+file_line { 'Set X-Served-By header':
+  ensure   => 'present',
+  after    => 'http {',
+  path     => '/etc/nginx/nginx.conf',
+  multiple => true,
+  line     => $custom_header,
+  notify   => Exec['restart nginx'],
+  require  => File['/var/www/html/index.html']
 }
