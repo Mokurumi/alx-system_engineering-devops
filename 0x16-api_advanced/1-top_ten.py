@@ -12,9 +12,7 @@ def top_ten(subreddit):
     listed for a given subreddit
     """
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                             'AppleWebKit/537.36 (KHTML, like Gecko) '
-                             'Chrome/81.0.4044.138 Safari/537.36'}
+    headers = {'User-Agent': 'My Reddit Client'}
     response = requests.get(url, headers=headers, allow_redirects=False)
     if response.status_code == 200:
         for post in response.json()['data']['children'][:10]:
